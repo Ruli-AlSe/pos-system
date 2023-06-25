@@ -16,7 +16,57 @@ model User {
   name         String?
   cashRegister String
   active       Boolean
+  products     Product[]
   createdAt    DateTime  @default(now())
   deletedAt    DateTime?
   updatedAt    DateTime? @updatedAt
+}
+
+model Customer {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String
+  address     String?
+  phoneNumber String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  deletedAt   DateTime?
+  updatedAt   DateTime? @updatedAt
+  Cart        Cart[]
+}
+
+enum Category {
+  office
+  writing
+  papers
+  packaging
+  gifts
+  supplies
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  category    Category
+  price       Float
+  quantity    Int
+  imageUrl    String?
+  location    String?
+  brand       String
+  description String?
+  customer    Customer? @relation(fields: [customerId], references: [id])
+  customerId  Int?
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      Int?
+  Cart        Cart?     @relation(fields: [cartId], references: [id])
+  cartId      Int?
+}
+
+model Cart {
+  id         Int       @id @default(autoincrement())
+  customer   Customer  @relation(fields: [customerId], references: [id])
+  products   Product[]
+  customerId Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
 }
